@@ -78,8 +78,8 @@ static void r4k_fill_tlb(CPUMIPSState *env, int idx)
     tlb->XI1 = (env->CP0_EntryLo1 >> CP0EnLo_XI) & 1;
     tlb->RI1 = (env->CP0_EntryLo1 >> CP0EnLo_RI) & 1;
     tlb->PFN[1] = (get_tlb_pfn_from_entrylo(env->CP0_EntryLo1) & ~mask) << 12;
-    tlb->A0 = (env->CP0_EntryLo0 >> 5) & 0x1;
-    tlb->A1 = (env->CP0_EntryLo1 >> 5) & 0x1;
+    tlb->A0 = (env->CP0_EntryLo0 >> 26) & 0x1;
+    tlb->A1 = (env->CP0_EntryLo1 >> 26) & 0x1;
     
 }
 
@@ -265,12 +265,12 @@ static void r4k_helper_tlbr(CPUMIPSState *env)
         env->CP0_EntryLo0 = tlb->G | (tlb->V0 << 1) | (tlb->D0 << 2) |
                         ((uint64_t)tlb->RI0 << CP0EnLo_RI) |
                         ((uint64_t)tlb->XI0 << CP0EnLo_XI) | (tlb->C0 << 3) |
-                        (tlb->A0 << 5) |
+                        (tlb->A0 << 26) |
                         get_entrylo_pfn_from_tlb(tlb->PFN[0] >> 12);
         env->CP0_EntryLo1 = tlb->G | (tlb->V1 << 1) | (tlb->D1 << 2) |
                         ((uint64_t)tlb->RI1 << CP0EnLo_RI) |
                         ((uint64_t)tlb->XI1 << CP0EnLo_XI) | (tlb->C1 << 3) |
-                        (tlb->A1 << 5) |
+                        (tlb->A1 << 26) |
                         get_entrylo_pfn_from_tlb(tlb->PFN[1] >> 12);
     }
 }
