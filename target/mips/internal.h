@@ -130,6 +130,10 @@ struct r4k_tlb_t {
     unsigned int V1:1;
     unsigned int D0:1;
     unsigned int D1:1;
+    // ADD ACCESSED BITS FOR TLB ENTRIES.
+    unsigned int A0:1;
+    unsigned int A1:1;
+    //
     unsigned int XI0:1;
     unsigned int XI1:1;
     unsigned int RI0:1;

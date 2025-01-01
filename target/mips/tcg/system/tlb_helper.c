@@ -262,10 +262,12 @@ static void r4k_helper_tlbr(CPUMIPSState *env)
         env->CP0_EntryLo0 = tlb->G | (tlb->V0 << 1) | (tlb->D0 << 2) |
                         ((uint64_t)tlb->RI0 << CP0EnLo_RI) |
                         ((uint64_t)tlb->XI0 << CP0EnLo_XI) | (tlb->C0 << 3) |
+                        (tlb->A0 << 5) |
                         get_entrylo_pfn_from_tlb(tlb->PFN[0] >> 12);
         env->CP0_EntryLo1 = tlb->G | (tlb->V1 << 1) | (tlb->D1 << 2) |
                         ((uint64_t)tlb->RI1 << CP0EnLo_RI) |
                         ((uint64_t)tlb->XI1 << CP0EnLo_XI) | (tlb->C1 << 3) |
+                        (tlb->A1 << 5) |
                         get_entrylo_pfn_from_tlb(tlb->PFN[1] >> 12);
     }
 }
@@ -415,6 +417,13 @@ static int r4k_map_address(CPUMIPSState *env, hwaddr *physical, int *prot,
             /* TLB match */
             int n = !!(address & mask & ~(mask >> 1));
             /* Check access rights */
+            if (n) {
+                tlb->A1 = 1;
+            } else {
+                tlb->A0 = 1;
+            }
+            qemu_log_mask(CPU_LOG_MMU,
+                      "[cccc] tring to access the matched tlb %08x\n",i);
             if (!(n ? tlb->V1 : tlb->V0)) {
                 return TLBRET_INVALID;
             }
