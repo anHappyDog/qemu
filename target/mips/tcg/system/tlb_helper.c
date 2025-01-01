@@ -78,6 +78,9 @@ static void r4k_fill_tlb(CPUMIPSState *env, int idx)
     tlb->XI1 = (env->CP0_EntryLo1 >> CP0EnLo_XI) & 1;
     tlb->RI1 = (env->CP0_EntryLo1 >> CP0EnLo_RI) & 1;
     tlb->PFN[1] = (get_tlb_pfn_from_entrylo(env->CP0_EntryLo1) & ~mask) << 12;
+    tlb->A0 = (env->CP0_EntryLo0 >> 5) & 0x1;
+    tlb->A1 = (env->CP0_EntryLo1 >> 5) & 0x1;
+    
 }
 
 static void r4k_helper_tlbinv(CPUMIPSState *env)
